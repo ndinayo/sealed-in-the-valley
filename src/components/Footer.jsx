@@ -1,6 +1,7 @@
 // src/components/Footer.jsx
 import React from "react";
 import logo from "../assets/logo/sealed-logo.png";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -30,13 +31,28 @@ const Footer = () => {
 
         {/* Contact Info */}
         <div>
-          <h4 className="text-lg font-semibold mb-3 text-primary">Contact</h4>
-          <p className="text-sm text-gray-300">
-            📍 45 Main Street, Valley Town <br />
-            📞 +1 (234) 567-890  
-            <br />✉️ info@sealedinthevalley.com
-          </p>
-        </div>
+  <h4 className="text-lg font-semibold mb-3 text-primary">Contact</h4>
+
+  <div className="space-y-3 text-sm text-gray-300">
+    {/* Address */}
+    <div className="flex items-start space-x-2">
+      <FaMapMarkerAlt className="text-primary mt-1" />
+      <p>45 Main Street, Valley Town</p>
+    </div>
+
+    {/* Phone */}
+    <div className="flex items-start space-x-2">
+      <FaPhoneAlt className="text-primary mt-1" />
+      <p>+1 (405) 861-5061</p>
+    </div>
+
+    {/* Email */}
+    <div className="flex items-start space-x-2">
+      <FaEnvelope className="text-primary mt-1" />
+      <p>info@sealedinthevalley.com</p>
+    </div>
+  </div>
+</div>
 
         {/* Newsletter */}
         <div>
