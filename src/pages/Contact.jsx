@@ -1,26 +1,26 @@
 import React, { useRef, useState } from "react";
 import emailjs from "emailjs-com";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
-import Navbar from "../components/Navbar"; // ✅ Shared navbar with links working
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
+import officeImg from "../assets/about/about-img.jpeg"; // ✅ Correct image import
 
 const Contact = () => {
   const form = useRef();
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // === EmailJS function ===
+  // === EmailJS handler ===
   const sendEmail = (e) => {
     e.preventDefault();
     setLoading(true);
 
     emailjs
       .sendForm(
-        "YOUR_SERVICE_ID",     // Replace with your EmailJS service ID
-        "YOUR_TEMPLATE_ID",    // Replace with your EmailJS template ID
+        "YOUR_SERVICE_ID", // Replace with your EmailJS service ID
+        "YOUR_TEMPLATE_ID", // Replace with your EmailJS template ID
         form.current,
-        "YOUR_PUBLIC_KEY"      // Replace with your EmailJS public key
+        "YOUR_PUBLIC_KEY" // Replace with your EmailJS public key
       )
       .then(
         () => {
@@ -58,7 +58,7 @@ const Contact = () => {
           </p>
         </div>
 
-        {/* Info + Form Grid */}
+        {/* Contact Info + Form */}
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 bg-white p-8 rounded-xl shadow-lg">
           {/* === Left Column: Info === */}
           <div className="space-y-6">
@@ -86,17 +86,17 @@ const Contact = () => {
               </span>
             </div>
 
-            {/* Image */}
+            {/* ✅ Working Image Import */}
             <div className="mt-6">
               <img
-                src="/src/assets/about/about-img.jpeg"
+                src={officeImg}
                 alt="Office"
                 className="rounded-lg shadow-md hover:scale-[1.02] transition-transform duration-300"
               />
             </div>
           </div>
 
-          {/* === Right Column: Form === */}
+          {/* === Right Column: Email Form === */}
           <form ref={form} onSubmit={sendEmail} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <input
