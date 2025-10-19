@@ -25,6 +25,9 @@ export default {
         sans: ['Poppins', 'sans-serif'],
         heading: ['Inter', 'sans-serif'],
       },
+      transitionTimingFunction: {
+        soft: 'cubic-bezier(0.22, 1, 0.36, 1)', // ✅ Smooth natural easing
+      },
     },
   },
   plugins: [],

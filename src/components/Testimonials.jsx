@@ -1,5 +1,5 @@
-// src/components/Testimonials.jsx
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Preloader from "./Preloader"; // ✅ Reuse same loader
 import client1 from "../assets/testimonials/client1.jpeg";
 import client2 from "../assets/testimonials/client2.jpeg";
 import client3 from "../assets/testimonials/client3.png";
@@ -32,10 +32,50 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  // ✅ Preload testimonial images
+  useEffect(() => {
+    const promises = testimonials.map(
+      (t) =>
+        new Promise((resolve) => {
+          const img = new Image();
+          img.src = t.img;
+          img.onload = resolve;
+        })
+    );
+    Promise.all(promises).then(() => setLoaded(true));
+  }, []);
+
+  // ✅ Observe scroll position for animation
+  useEffect(() => {
+    if (!loaded) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [loaded]);
+
+  if (!loaded) return <Preloader />;
+
   return (
     <section
       id="testimonials"
-      className="py-20 bg-darkblue text-white relative animate-fadeIn"
+      ref={sectionRef}
+      className={`py-20 bg-darkblue text-white relative transition-all duration-[2000ms] ease-out ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
+      }`}
     >
       <div className="max-w-7xl mx-auto text-center px-6">
         <h3 className="text-primary text-lg font-semibold mb-2">
@@ -46,10 +86,15 @@ const Testimonials = () => {
         </h2>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {testimonials.map((t) => (
+          {testimonials.map((t, index) => (
             <div
               key={t.id}
-              className="bg-white/10 rounded-lg p-6 backdrop-blur-md shadow-md hover:translate-y-[-5px] transition-all duration-500"
+              className={`bg-white/10 rounded-lg p-6 backdrop-blur-md shadow-md transition-all duration-[2000ms] ease-out transform hover:-translate-y-1 ${
+                visible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-12"
+              }`}
+              style={{ transitionDelay: `${index * 0.15}s` }}
             >
               <p className="text-sm mb-4 italic">“{t.text}”</p>
               <div className="flex items-center justify-center mt-6 space-x-3">

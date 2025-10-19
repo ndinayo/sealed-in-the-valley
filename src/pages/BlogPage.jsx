@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Preloader from "../components/Preloader";
 import blog1 from "../assets/blog/blog1.jpeg";
 import blog2 from "../assets/blog/blog2.jpeg";
 import blog3 from "../assets/blog/blog3.jpeg";
@@ -37,13 +38,66 @@ const posts = [
 ];
 
 const BlogPage = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [visibleSections, setVisibleSections] = useState({});
+  const sectionRefs = {
+    hero: useRef(null),
+    content: useRef(null),
+  };
+
+  // ✅ Preload images
+  useEffect(() => {
+    const images = [blog1, blog2, blog3];
+    const promises = images.map(
+      (src) =>
+        new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+        })
+    );
+    Promise.all(promises).then(() => setLoaded(true));
+  }, []);
+
+  // ✅ Animate on scroll
+  useEffect(() => {
+    if (!loaded) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => ({
+              ...prev,
+              [entry.target.id]: true,
+            }));
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    Object.values(sectionRefs).forEach((ref) => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    return () => observer.disconnect();
+  }, [loaded]);
+
+  if (!loaded) return <Preloader />;
+
   return (
     <>
       <Navbar />
 
       {/* === Hero Section === */}
       <section
-        className="relative h-[60vh] flex items-center justify-center text-center text-white mt-20 md:mt-28"
+        id="hero"
+        ref={sectionRefs.hero}
+        className={`relative h-[60vh] flex items-center justify-center text-center text-white mt-20 md:mt-28 transition-all duration-[2000ms] ease-out ${
+          visibleSections.hero
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
         style={{
           backgroundImage:
             "linear-gradient(rgba(5, 20, 50, 0.7), rgba(5, 20, 50, 0.7)), url('https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=1200&q=80')",
@@ -66,7 +120,15 @@ const BlogPage = () => {
       </section>
 
       {/* === Blog Layout === */}
-      <section className="py-20 bg-white animate-fadeIn">
+      <section
+        id="content"
+        ref={sectionRefs.content}
+        className={`py-20 bg-white transition-all duration-[2000ms] ease-out ${
+          visibleSections.content
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-12"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-[2fr_1fr] gap-10">
           {/* === Blog Posts === */}
           <div className="space-y-10">
@@ -133,7 +195,9 @@ const BlogPage = () => {
                 inquiries.
               </p>
               <p className="text-primary font-semibold">+1 (405) 861-5061</p>
-              <p className="text-gray-300 text-sm">info@sealedinthevalley.com</p>
+              <p className="text-gray-300 text-sm">
+                info@sealedinthevalley.com
+              </p>
             </div>
 
             {/* Categories */}
@@ -143,7 +207,9 @@ const BlogPage = () => {
               </h4>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="hover:text-primary cursor-pointer">Tips</li>
-                <li className="hover:text-primary cursor-pointer">Real Estate</li>
+                <li className="hover:text-primary cursor-pointer">
+                  Real Estate
+                </li>
                 <li className="hover:text-primary cursor-pointer">Notary</li>
                 <li className="hover:text-primary cursor-pointer">Insight</li>
               </ul>

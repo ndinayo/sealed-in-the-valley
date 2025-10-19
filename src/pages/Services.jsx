@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Preloader from "../components/Preloader";
 import { BsCheckCircleFill } from "react-icons/bs";
 import mobileNotary from "../assets/services/mobile-notary.jpg";
 import businessDoc from "../assets/services/business-doc.jpg";
@@ -8,7 +9,7 @@ import realEstate from "../assets/services/real-estate.jpg";
 import familyDoc from "../assets/services/family-doc.jpg";
 import vehicleDoc from "../assets/services/vehicle-doc.jpg";
 import medicalDoc from "../assets/services/medical-doc.jpg";
-import heroBg from "../assets/services/hero-bg.jpg"; // ✅ Add your background image
+import heroBg from "../assets/services/hero-bg.jpg";
 
 const services = [
   { id: 1, title: "Mobile Notary", img: mobileNotary },
@@ -20,13 +21,67 @@ const services = [
 ];
 
 const Services = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [visibleSections, setVisibleSections] = useState({});
+  const sectionRefs = {
+    hero: useRef(null),
+    grid: useRef(null),
+    contact: useRef(null),
+  };
+
+  // ✅ Preload all service & hero images
+  useEffect(() => {
+    const images = [heroBg, ...services.map((s) => s.img)];
+    const promises = images.map(
+      (src) =>
+        new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+        })
+    );
+    Promise.all(promises).then(() => setLoaded(true));
+  }, []);
+
+  // ✅ Scroll-in animations
+  useEffect(() => {
+    if (!loaded) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => ({
+              ...prev,
+              [entry.target.id]: true,
+            }));
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    Object.values(sectionRefs).forEach((ref) => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    return () => observer.disconnect();
+  }, [loaded]);
+
+  if (!loaded) return <Preloader />;
+
   return (
     <>
       <Navbar />
 
-      {/* === Hero Section with Dark Overlay like About === */}
+      {/* === Hero Section === */}
       <section
-        className="relative h-[60vh] flex items-center justify-center text-center text-white mt-20 md:mt-28"
+        id="hero"
+        ref={sectionRefs.hero}
+        className={`relative h-[60vh] flex items-center justify-center text-center text-white mt-20 md:mt-28 transition-all duration-[2000ms] ease-out ${
+          visibleSections.hero
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
         style={{
           backgroundImage: `linear-gradient(rgba(5, 20, 50, 0.7), rgba(5, 20, 50, 0.7)), url(${heroBg})`,
           backgroundSize: "cover",
@@ -48,7 +103,15 @@ const Services = () => {
       </section>
 
       {/* === Services Grid Section === */}
-      <section id="services" className="py-20 bg-white">
+      <section
+        id="grid"
+        ref={sectionRefs.grid}
+        className={`py-20 bg-white transition-all duration-[2000ms] ease-out ${
+          visibleSections.grid
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-12"
+        }`}
+      >
         <div className="max-w-7xl mx-auto text-center mb-12 px-6">
           <h3 className="text-primary text-lg font-semibold mb-2">
             Practice Areas
@@ -96,7 +159,15 @@ const Services = () => {
       </section>
 
       {/* === Contact Section === */}
-      <section className="py-16 px-6 md:px-20 bg-darkblue text-white flex flex-col md:flex-row justify-between items-center gap-10">
+      <section
+        id="contact"
+        ref={sectionRefs.contact}
+        className={`py-16 px-6 md:px-20 bg-darkblue text-white flex flex-col md:flex-row justify-between items-center gap-10 transition-all duration-[2000ms] ease-out ${
+          visibleSections.contact
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-12"
+        }`}
+      >
         <div className="flex-1 space-y-6">
           <h3 className="text-lg text-primary uppercase tracking-wide">
             Online Notarization

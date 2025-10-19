@@ -1,8 +1,44 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Preloader from "./Preloader"; // ✅ Reuse same loader
 
 const QuickContact = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  // ✅ Simulate preloading (for consistency)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ✅ Trigger animation on scroll
+  useEffect(() => {
+    if (!loaded) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [loaded]);
+
+  if (!loaded) return <Preloader />;
+
   return (
-    <section className="bg-[#0b1b3f] text-white py-20 animate-fadeIn">
+    <section
+      ref={sectionRef}
+      className={`bg-[#0b1b3f] text-white py-20 transition-all duration-[2000ms] ease-out ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
         {/* === Left Side Text === */}
         <div className="flex-1 space-y-6 text-center md:text-left">

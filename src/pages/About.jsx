@@ -1,23 +1,79 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Preloader from "../components/Preloader";
 import { BsCheckCircleFill, BsFillTelephoneFill } from "react-icons/bs";
 import { FaUsers, FaTrophy, FaFileSignature, FaSmile } from "react-icons/fa";
-import heroBg from "../assets/about/hero-bg.jpeg"; // ✅ Replace with your hero image
-import aboutImg1 from "../assets/about/about1.jpeg"; // ✅ Replace with your local images
-import aboutImg2 from "../assets/about/about2.jpeg"; // ✅ Replace with your local images
+import heroBg from "../assets/about/hero-bg.jpeg";
+import aboutImg1 from "../assets/about/about1.jpeg";
+import aboutImg2 from "../assets/about/about2.jpeg";
 import team1 from "../assets/team/member1.jpeg";
 import team2 from "../assets/team/member2.jpeg";
 import team3 from "../assets/team/member3.jpeg";
 
 const About = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [visibleSections, setVisibleSections] = useState({});
+  const sectionRefs = {
+    hero: useRef(null),
+    about: useRef(null),
+    why: useRef(null),
+    team: useRef(null),
+  };
+
+  // ✅ Preload all images
+  useEffect(() => {
+    const images = [heroBg, aboutImg1, aboutImg2, team1, team2, team3];
+    const promises = images.map(
+      (src) =>
+        new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+        })
+    );
+    Promise.all(promises).then(() => setLoaded(true));
+  }, []);
+
+  // ✅ Observer for scroll animations
+  useEffect(() => {
+    if (!loaded) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => ({
+              ...prev,
+              [entry.target.id]: true,
+            }));
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    Object.values(sectionRefs).forEach((ref) => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    return () => observer.disconnect();
+  }, [loaded]);
+
+  if (!loaded) return <Preloader />;
+
   return (
     <>
       <Navbar />
 
       {/* === Hero Section === */}
       <section
-        className="relative h-[60vh] flex items-center justify-center text-center text-white mt-20 md:mt-28"
+        id="hero"
+        ref={sectionRefs.hero}
+        className={`relative h-[60vh] flex items-center justify-center text-center text-white mt-20 md:mt-28 transition-all duration-[2000ms] ease-out ${
+          visibleSections.hero
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
         style={{
           backgroundImage: `linear-gradient(rgba(5, 20, 50, 0.7), rgba(5, 20, 50, 0.7)), url(${heroBg})`,
           backgroundSize: "cover",
@@ -39,7 +95,15 @@ const About = () => {
       </section>
 
       {/* === About Content === */}
-      <section className="py-20 px-6 md:px-20 bg-white">
+      <section
+        id="about"
+        ref={sectionRefs.about}
+        className={`py-20 px-6 md:px-20 bg-white transition-all duration-[2000ms] ease-out ${
+          visibleSections.about
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-12"
+        }`}
+      >
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h5 className="text-primary font-semibold uppercase">
@@ -99,7 +163,15 @@ const About = () => {
       </section>
 
       {/* === Why Choose Us === */}
-      <section className="bg-[#0b1b3f] text-white py-20 px-6 md:px-20">
+      <section
+        id="why"
+        ref={sectionRefs.why}
+        className={`bg-[#0b1b3f] text-white py-20 px-6 md:px-20 transition-all duration-[2000ms] ease-out ${
+          visibleSections.why
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-12"
+        }`}
+      >
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div>
             <h5 className="text-primary uppercase font-semibold mb-2">
@@ -148,7 +220,15 @@ const About = () => {
       </section>
 
       {/* === Meet Our Experts === */}
-      <section className="py-20 px-6 md:px-20 bg-[#f7f7f7] text-center">
+      <section
+        id="team"
+        ref={sectionRefs.team}
+        className={`py-20 px-6 md:px-20 bg-[#f7f7f7] text-center transition-all duration-[2000ms] ease-out ${
+          visibleSections.team
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-12"
+        }`}
+      >
         <h5 className="text-primary uppercase font-semibold">Our Team</h5>
         <h2
           className="text-3xl md:text-4xl font-bold text-darkblue mb-12"
@@ -163,7 +243,11 @@ const About = () => {
               key={i}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
             >
-              <img src={img} alt="Team Member" className="w-full h-72 object-cover" />
+              <img
+                src={img}
+                alt="Team Member"
+                className="w-full h-72 object-cover"
+              />
               <div className="p-5">
                 <h4 className="font-bold text-darkblue text-lg">
                   {i === 0
