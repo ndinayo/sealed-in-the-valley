@@ -4,6 +4,7 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import Navbar from "../components/Navbar"; // ✅ Shared navbar with links working
 import Footer from "../components/Footer";
 
+
 const Contact = () => {
   const form = useRef();
   const [sent, setSent] = useState(false);
