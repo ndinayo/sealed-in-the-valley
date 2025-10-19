@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo/sealed-logo.png";
@@ -26,7 +25,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* === Main Nav === */}
+      {/* === Main Navigation === */}
       <nav className="max-w-7xl mx-auto flex justify-between items-center py-5 px-6">
         {/* Logo + Name */}
         <Link to="/" className="flex items-center space-x-2">
@@ -39,16 +38,16 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Menu */}
+        {/* === Desktop Menu === */}
         <ul className="hidden md:flex space-x-8 text-darkblue font-semibold text-sm tracking-wider uppercase">
           <li><Link to="/" className="hover:text-primary transition">Home</Link></li>
           <li><a href="#about" className="hover:text-primary transition">About Us</a></li>
-          <li><a href="#services" className="hover:text-primary transition flex items-center space-x-1">Services <span>▼</span></a></li>
-          <li><a href="#pages" className="hover:text-primary transition flex items-center space-x-1">Pages <span>▼</span></a></li>
-          <li><a href="#blog" className="hover:text-primary transition flex items-center space-x-1">Blog <span>▼</span></a></li>
+          <li><a href="#services" className="hover:text-primary transition">Services</a></li>
+          <li><Link to="/pricing" className="hover:text-primary transition">Pricing</Link></li>
+          <li><a href="#blog" className="hover:text-primary transition">Blog</a></li>
         </ul>
 
-        {/* Contact Button (Always visible on mobile + desktop) */}
+        {/* === Contact Button (always visible) === */}
         <Link
           to="/contact"
           className="bg-primary text-white px-5 py-3 rounded-md font-semibold hover:bg-darkblue transition duration-300 flex items-center"
@@ -57,7 +56,7 @@ const Navbar = () => {
           Contact
         </Link>
 
-        {/* Mobile Menu Toggle */}
+        {/* === Mobile Menu Toggle === */}
         <button
           className="md:hidden text-darkblue text-3xl ml-3 focus:outline-none"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -70,13 +69,33 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="md:hidden bg-white shadow-lg border-t border-gray-200 animate-fadeInDown">
           <ul className="flex flex-col space-y-4 py-4 px-6 text-darkblue font-semibold uppercase">
-            <li><Link to="/" onClick={() => setMobileOpen(false)} className="hover:text-primary transition">Home</Link></li>
-            <li><a href="#about" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>About Us</a></li>
-            <li><a href="#services" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>Services</a></li>
-            <li><a href="#pages" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>Pages</a></li>
-            <li><a href="#blog" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>Blog</a></li>
+            <li>
+              <Link to="/" onClick={() => setMobileOpen(false)} className="hover:text-primary transition">
+                Home
+              </Link>
+            </li>
+            <li>
+              <a href="#about" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="#services" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>
+                Services
+              </a>
+            </li>
+            <li>
+              <Link to="/pricing" onClick={() => setMobileOpen(false)} className="hover:text-primary transition">
+                Pricing
+              </Link>
+            </li>
+            <li>
+              <a href="#blog" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>
+                Blog
+              </a>
+            </li>
 
-            {/* Contact Button in Mobile Drawer */}
+            {/* === Contact Button in Mobile Drawer === */}
             <li>
               <Link
                 to="/contact"

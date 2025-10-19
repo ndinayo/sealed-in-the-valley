@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import Contact from "./pages/Contact.jsx";
+import Pricing from "./pages/Pricing.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -11,6 +12,7 @@ createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/pricing" element={<Pricing />} /> {/* ✅ New Page */}
       </Routes>
     </BrowserRouter>
   </StrictMode>
