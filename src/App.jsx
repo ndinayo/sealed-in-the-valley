@@ -7,6 +7,7 @@ import Services from "./components/Services";
 import Testimonials from "./components/Testimonials";
 import Team from "./components/Team";
 import Blog from "./components/Blog";
+import QuickContact from "./components/QuickContact";
 import Footer from "./components/Footer";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Testimonials />
       <Team />
       <Blog />
+       <QuickContact /> 
       <Footer />
     </div>
   );

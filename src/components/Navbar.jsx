@@ -40,11 +40,31 @@ const Navbar = () => {
 
         {/* === Desktop Menu === */}
         <ul className="hidden md:flex space-x-8 text-darkblue font-semibold text-sm tracking-wider uppercase">
-          <li><Link to="/" className="hover:text-primary transition">Home</Link></li>
-          <li><a href="#about" className="hover:text-primary transition">About Us</a></li>
-          <li><a href="#services" className="hover:text-primary transition">Services</a></li>
-          <li><Link to="/pricing" className="hover:text-primary transition">Pricing</Link></li>
-          <li><a href="#blog" className="hover:text-primary transition">Blog</a></li>
+          <li>
+            <Link to="/" className="hover:text-primary transition">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/about" className="hover:text-primary transition">
+              About Us
+            </Link>
+          </li>
+          <li>
+            <Link to="/services" className="hover:text-primary transition">
+              Services
+            </Link>
+          </li>
+          <li>
+            <Link to="/pricing" className="hover:text-primary transition">
+              Pricing
+            </Link>
+          </li>
+          <li>
+            <Link to="/blog" className="hover:text-primary transition">
+              Blog
+            </Link>
+          </li>
         </ul>
 
         {/* === Contact Button (always visible) === */}
@@ -70,29 +90,49 @@ const Navbar = () => {
         <div className="md:hidden bg-white shadow-lg border-t border-gray-200 animate-fadeInDown">
           <ul className="flex flex-col space-y-4 py-4 px-6 text-darkblue font-semibold uppercase">
             <li>
-              <Link to="/" onClick={() => setMobileOpen(false)} className="hover:text-primary transition">
+              <Link
+                to="/"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-primary transition"
+              >
                 Home
               </Link>
             </li>
             <li>
-              <a href="#about" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>
+              <Link
+                to="/about"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-primary transition"
+              >
                 About Us
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#services" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>
+              <Link
+                to="/services"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-primary transition"
+              >
                 Services
-              </a>
+              </Link>
             </li>
             <li>
-              <Link to="/pricing" onClick={() => setMobileOpen(false)} className="hover:text-primary transition">
+              <Link
+                to="/pricing"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-primary transition"
+              >
                 Pricing
               </Link>
             </li>
             <li>
-              <a href="#blog" className="hover:text-primary transition" onClick={() => setMobileOpen(false)}>
+              <Link
+                to="/blog"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-primary transition"
+              >
                 Blog
-              </a>
+              </Link>
             </li>
 
             {/* === Contact Button in Mobile Drawer === */}
